@@ -38,9 +38,11 @@ export const register=async(req,res)=>{
     }
 }
 export const login=async (req,res)=>{
+    console.log("called")
     try {
         
         const{email,password,role}=req.body;
+        console.log(req.body);
         if(!email || !password || !role){
             return res.status(400).json({
                 msg:"Something is missing",
@@ -48,6 +50,7 @@ export const login=async (req,res)=>{
             })
         }
         let user=await User.findOne({email}) ;
+        console.log("User",user);
         if(!user){
             return  res.status(400).json({
                 msg:"Incorrect email or password",
@@ -56,6 +59,7 @@ export const login=async (req,res)=>{
 
         }
         const isPasswordMatch=await bcrypt.compare(password,user.password);
+        console.log("password match", isPasswordMatch)
         if(!isPasswordMatch){
             return  res.status(400).json({
                 msg:"Incorrect email or password",
@@ -71,7 +75,9 @@ export const login=async (req,res)=>{
         const tokenData={
             userId:user._id,
         }
+        console.log("Token data", tokenData);
         const token=await jwt.sign(tokenData,process.env.SECRET_KEY,{expiresIn:'1d'})
+        console.log("Token",token);
         user={
             _id:user._id,
             fullname:user.fullname,
@@ -80,8 +86,8 @@ export const login=async (req,res)=>{
             role:user.role,
             profile:user.profile
         }
-    
-        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'strict' }).json({
+        console.log("User", user)
+        return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpsOnly: true, sameSite: 'none', secure:true }).json({
             token:token,
             message: `Welcome back ${user.fullname}`,
             user,

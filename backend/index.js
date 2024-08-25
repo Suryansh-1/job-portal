@@ -11,21 +11,20 @@ dotenv.config({})
 const app = express();
 
 
-app.get("/home",(req,res)=>{
-    return res.status(200).json({msg:"Home page",success:true})
-})
-//middleware
-app.use(express.json());
-
-app.use(express.urlencoded({ extended: true }));
-
-app.use(cookieParser());
 const corsOptions = {
-    origin: "http://localhost:5173",
     credentials: true,
+    origin: "https://job-portal-five-bice.vercel.app",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 };
 
+//middleware
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
+
+
+
 
 const PORT =process.env.PORT || 3000;
 
