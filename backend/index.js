@@ -32,7 +32,9 @@ const PORT =process.env.PORT || 3000;
 //api's
 
 
-
+app.use("/hello",(req,res)=>{
+    res.send({message:"hello"})
+})
 app.use("/api/v1/user",userRoute)
 app.use("/api/v1/company",comapanyRoute)
 app.use("/api/v1/job",jobRoute)
@@ -46,3 +48,5 @@ app.listen(PORT, () => {
     console.log(`Server is running at port ${PORT}`);
 });
 
+
+export default app;
